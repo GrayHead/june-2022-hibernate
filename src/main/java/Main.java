@@ -8,6 +8,7 @@ import org.hibernate.boot.MetadataSources;
 import org.hibernate.boot.registry.StandardServiceRegistry;
 import org.hibernate.boot.registry.StandardServiceRegistryBuilder;
 
+import java.util.Arrays;
 import java.util.List;
 
 
@@ -35,15 +36,12 @@ public class Main {
 
         Passport vk = new Passport("vk", "87656351"); // 0
 
-        User user = new User("vasya1", "pupkin", vk);
+        User user = new User("vasya1", "pupkin", vk, Arrays.asList(new Card("1253461254 6756 535"), new Card("87565454353")));
         session.save(user);
-        session.save(new User("vasya2", "pupkin", new Passport("ah", "286352754")));
-        session.save(new User("vasya3", "pupkin", new Passport("vs", "0892683741")));
 
-        Card card1 = new Card("1234 1234 1234 1234",user);
 
-        session.save(card1);
-
+        User user1 = session.find(User.class, 1);
+        List<Card> cards = user1.getCards();
 
 
         session.getTransaction().commit();
