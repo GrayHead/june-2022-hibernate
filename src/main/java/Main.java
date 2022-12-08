@@ -1,3 +1,4 @@
+import models.Passport;
 import models.User;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
@@ -20,6 +21,7 @@ public class Main {
         Metadata metadata =
                 new MetadataSources(serviceRegistry)
                         .addAnnotatedClass(User.class) /*!!!!!!! register class*/
+                        .addAnnotatedClass(Passport.class) /*!!!!!!! register class*/
                         .getMetadataBuilder()
                         .build();
         SessionFactory sessionFactory = metadata.getSessionFactoryBuilder().build();
@@ -29,12 +31,14 @@ public class Main {
 
         session.beginTransaction();
 
-        session.save(new User("vasya", "pupkin"));
-        session.save(new User("peyua", "kkosov"));
-        session.save(new User("taras"));
-        session.save(new User("ananas"));
-        session.save(new User("kokos"));
-        session.save(new User("max", "golov"));
+        Passport vk = new Passport("vk", "87656351"); // 0
+        System.out.println(vk); // 0
+        session.save(vk);
+        System.out.println(vk); //1
+
+        session.save(new User("vasya1", "pupkin", vk));
+        session.save(new User("vasya2", "pupkin", new Passport("ah", "286352754")));
+        session.save(new User("vasya3", "pupkin", new Passport("vs", "0892683741")));
         session.getTransaction().commit();
 
         List<User> list =
@@ -42,8 +46,12 @@ public class Main {
                 session.createQuery("select u from User u", User.class).list();
 //        System.out.println(list);
 
-        User user = session.find(User.class, 2);
+        User user = session.find(User.class, 2); // User passport - null
+
         System.out.println(user);
+        System.out.println("''''''''''''''''''''''''''''''''''''");
+        System.out.println(user.getPassport());
+
 
 
 
