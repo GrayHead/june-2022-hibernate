@@ -12,7 +12,6 @@ import java.util.List;
 @Entity
 //@EqualsAndHashCode
 @Table(name = "user_table")
-@ToString
 public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -42,6 +41,14 @@ public class User {
     )
     private List<Card> cards;
 
+    @ManyToMany(cascade = CascadeType.ALL)
+    @JoinTable(
+            name = "user_sg",
+            joinColumns = @JoinColumn(name = "user_id"),
+            inverseJoinColumns = @JoinColumn(name = "sg_id")
+    )
+    private List<Sunglass> sunglasses;
+
     public User(String name, String surname) {
         this.name = name;
         this.surname = surname;
@@ -62,5 +69,11 @@ public class User {
         this.surname = surname;
         this.passport = passport;
         this.cards = cards;
+    }
+
+    public User(String name, String surname, List<Sunglass> sunglasses) {
+        this.name = name;
+        this.surname = surname;
+        this.sunglasses = sunglasses;
     }
 }
